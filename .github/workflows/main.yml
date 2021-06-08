@@ -94,8 +94,6 @@ jobs:
           curl --request POST \
           --url https://api.amezmo.com/api/sites/${{ secrets.SITE_ID }}/deployments \
           --header 'authorization: Bearer ${{ secrets.API_KEY }}' \
-          --header 'content-type: application/json' \
-          --data '{
-            "environment": "production",
-            "archive": "latest.zip"
-            }'
+          --header 'content-type: multipart/form-data' \
+          --form environment=production \
+          --form archive=@{latest.zip}
