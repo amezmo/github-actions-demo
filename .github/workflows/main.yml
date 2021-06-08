@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download Latest ZIP Release
-      - run: |
+        run: |
           curl -s https://api.github.com/repos/amezmo/github-actions-demo/releases/latest | \
           grep -E "zipball_url" | grep -Eo 'https://[^\"]*' | xargs wget -O "latest.zip"
       - name: Deploy The App To Amezmo
