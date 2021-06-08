@@ -71,8 +71,7 @@ jobs:
           DB_DATABASE: github_actions_demo
           DB_PORT: 3306
           DB_USER: root
-      - name: Clear Config
-        run: php artisan config:clear
+        run: PHP artisan config:clear
       - name: Run Migration
         run: php artisan migrate
         
