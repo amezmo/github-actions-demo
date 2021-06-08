@@ -96,4 +96,4 @@ jobs:
           --header 'authorization: Bearer ${{ secrets.API_KEY }}' \
           --header 'content-type: multipart/form-data' \
           --form environment=production \
-          --form archive=@{latest.zip}
+          --form archive=@latest.zip
