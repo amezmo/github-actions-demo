@@ -1,7 +1,7 @@
 name: Laravel Build and Deploy To Amezmo
 on:
   push:
-    branches: [main]
+    branches: [master]
 jobs:
   build:
     runs-on: ubuntu-latest # Machine To Run On
