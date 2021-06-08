@@ -68,7 +68,7 @@ jobs:
       - name: Clear Config
         run: php artisan config:clear
       - name: Run Migration
-        run: php artisan migrate
+        run: php artisan migrate --force
         
   release:
     needs: build # The below only runs if the build is succesful
