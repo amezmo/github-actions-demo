@@ -92,10 +92,10 @@ jobs:
       - name: Deploy The App To Amezmo
         run: |
           curl --request POST \
-          --url https://api.amezmo.com/api/sites/${{ secrets.SITE_ID }}/issues \
+          --url https://api.amezmo.com/api/sites/${{ secrets.SITE_ID }}/deployments \
           --header 'authorization: Bearer ${{ secrets.API_KEY }}' \
           --header 'content-type: application/json' \
           --data '{
-            "environment": "production ",
+            "environment": "production",
             "archive": "latest.zip"
             }'
