@@ -82,5 +82,5 @@ jobs:
           --header 'content-type: application/json' \
           --data '{
             "environment": "production ",
-            "archive": "https://github.com/amezmo/github-actions-demo/archive/refs/tags/1.0.0.zip"
+            "archive": "latest.zip"
             }'
