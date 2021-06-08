@@ -1,0 +1,91 @@
+name: Laravel Build and Deploy To Amezmo
+on:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Node.js Setup
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+      - name: Cache node_modules directory
+        uses: actions/cache@v2
+        id: node_modules-cache
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package.json') }}-${{ hashFiles('**/package-lock.json') }}
+      - name: Install NPM packages
+        if: steps.node_modules-cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Build frontend
+        run: npm run dev
+        
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          
+      - name: Get Composer Cache Directory 2
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v2
+        id: actions-cache
+        with:
+          path: '${{ steps.composer-cache.outputs.dir }}'
+          key: '${{ runner.os }}-composer-${{ hashFiles(''**/composer.lock'') }}'
+          restore-keys: |
+            ${{ runner.os }}-composer-
+            
+      - name: Cache PHP dependencies
+        uses: actions/cache@v2
+        id: vendor-cache
+        with:
+          path: vendor
+          key: '${{ runner.OS }}-build-${{ hashFiles(''**/composer.lock'') }}'
+          
+      - name: Copy .env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');" # If .env exist, we use that, if otherwise, copy .env.example to .env and use that instead
+      - name: Install Dependencies
+        if: steps.vendor-cache.outputs.cache-hit != 'true'
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      - name: Generate key
+        run: php artisan key:generate
+      - name: Change Directory Permissions
+        run: chmod -R 777 storage bootstrap/cache
+      - name: Run Migrations
+        run: php artisan migrate
+        
+  release:
+    needs: build # The below only runs if the build is succesful
+    runs-on: ubuntu-latest
+    steps:
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+            repo_token: "${{ secrets.GITHUB_TOKEN }}"
+            automatic_release_tag: "latest"
+            prerelease: false
+            title: "Production Release"
+        
+  deploy:
+    needs: [build, release] # The below only runs if the build and release is succesful 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Latest ZIP Release
+      - run: |
+          curl -s https://api.github.com/repos/amezmo/github-actions-demo/releases/latest | \
+          grep -E "zipball_url" | grep -Eo 'https://[^\"]*' | xargs wget -O "latest.zip"
+      - name: Deploy The App To Amezmo
+        run: |
+          curl --request POST \
+          --url https://api.amezmo.com/api/sites/${{ secrets.SITE_ID }}/issues \
+          --header 'authorization: Bearer ${{ secrets.API_KEY }}' \
+          --header 'content-type: application/json' \
+          --data '{
+            "environment": "production ",
+            "archive": "https://github.com/amezmo/github-actions-demo/archive/refs/tags/1.0.0.zip"
+            }'
