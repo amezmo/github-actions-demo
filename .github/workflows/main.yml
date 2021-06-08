@@ -4,7 +4,7 @@ on:
     branches: [main]
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Machine To Run On
     steps:
       - uses: actions/checkout@v2
       - name: Node.js Setup
