@@ -72,16 +72,16 @@ jobs:
       - name: Create an Archive For Release
         uses: montudor/action-zip@v0.1.0
         with:
-          args: zip -X -r latest.zip . -x ".git/*" "node_modules/*" "tests/*" ".github/*" composer.* package* phpunit.xml # We excluding git, node_modules, and others not needed in production
+          args: zip -X -r github-actions-demo.zip . -x ".git/*" "node_modules/*" "tests/*" ".github/*" composer.* package* phpunit.xml # We excluding git, node_modules, and others not needed in production
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
             name: github-actions-demo
-            path: latest.zip
+            path: github-actions-demo.zip
       - name: Upload to release
         uses: JasonEtco/upload-to-release@master
         with:
-          args: latest.zip
+          args: github-actions-demo.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
