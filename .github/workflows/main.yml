@@ -69,20 +69,24 @@ jobs:
         run: php artisan config:clear
       - name: Run Migration
         run: php artisan migrate --force
-        
-  release:
-    needs: build # The below only runs if the build is succesful
-    runs-on: ubuntu-latest
-    steps:
-      - uses: "marvinpinto/action-automatic-releases@latest"
+      - name: Create an Archive For Release
+        uses: montudor/action-zip@v0.1.0
         with:
-            repo_token: "${{ secrets.GITHUB_TOKEN }}"
-            automatic_release_tag: "latest"
-            prerelease: false
-            title: "Production Release"
+          args: zip -X -r latest.zip . -x ".git/*" "node_modules/*" "tests/*" ".github/*" composer.* package* phpunit.xml # We excluding git, node_modules, and others not needed in production
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+            name: github-actions-demo
+            path: latest.zip
+      - name: Upload to release
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: latest.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
   deploy:
-    needs: [build, release] # The below only runs if the build and release is succesful 
+    needs: [build] # The below only runs if the build is succesful 
     runs-on: ubuntu-latest
     steps:
       - name: Download Latest ZIP Release
