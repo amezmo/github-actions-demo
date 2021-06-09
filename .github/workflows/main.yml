@@ -95,7 +95,7 @@ jobs:
       - name: Download Latest ZIP Release
         run: |
           curl -s https://api.github.com/repos/amezmo/github-actions-demo/releases/latest | \
-          grep -E "zipball_url" | grep -Eo 'https://[^\"]*' | xargs wget -O "latest.zip"
+          grep -E "browser_download_url" | grep -Eo 'https://[^\"]*' | xargs wget -O "latest.zip"
       - name: Deploy The App To Amezmo
         run: |
           curl --request POST \
