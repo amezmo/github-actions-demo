@@ -78,12 +78,15 @@ jobs:
         with:
             name: github-actions-demo.zip
             path: github-actions-demo.zip
-      - name: Upload to release
-        uses: JasonEtco/upload-to-release@master
+      - name: Upload Release
+        uses: svenstaro/upload-release-action@v2
         with:
-          args: github-actions-demo.zip application/zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: github-actions-demo.zip
+          asset_name: github-actions-demo
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "Latest Release"
         
   deploy:
     needs: [build] # The below only runs if the build is succesful 
