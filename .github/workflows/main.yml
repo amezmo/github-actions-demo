@@ -76,7 +76,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-            name: github-actions-demo.zip
+            name: github-actions-demo
             path: github-actions-demo.zip
       - name: Upload Release
         uses: svenstaro/upload-release-action@v2
