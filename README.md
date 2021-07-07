@@ -1,3 +1,10 @@
+
+# Laravel with GitHub Actions
+
+A demo repository for deploying a Laravel application to Amezmo with GitHub Actions. See the [Laravel GitHub Actions guide](https://www.amezmo.com/laravel-hosting-guides/deploy-a-laravel-application-to-amezmo) for more details.
+
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
 <p align="center">
